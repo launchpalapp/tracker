@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    uses: $/.github/workflows/check.yml
+
+  publish:
+    name: Publish to npm and create the GitHub release
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # creates the GitHub release
+      id-token: write # npm trusted publishing and provenance
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+
+      - name: Check the tag matches the package version
+        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+
+      - run: npm ci
+
+      # Trusted publishing through GitHub's OIDC token: no npm token is stored, and provenance is added.
+      - name: Publish to npm unless this version is already there
+        run: |
+          if npm view "$(node -p "require('./package.json').name")@$(node -p "require('./package.json').version")" version > /dev/null 2>&1; then
+            echo "This version is already on npm, so only the GitHub release is created."
+          else
+            npm publish
+          fi
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/pal.js --verify-tag --generate-notes
