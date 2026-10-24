@@ -1,0 +1,67 @@
+{
+  "name": "@launchpal/tracker",
+  "version": "0.1.0",
+  "description": "Privacy-friendly analytics script: page views, sources, time on page and goals, without cookies or personal data. Under 1 KB.",
+  "keywords": [
+    "analytics",
+    "privacy",
+    "cookieless",
+    "web-analytics",
+    "gdpr"
+  ],
+  "homepage": "https://launchpal.app",
+  "bugs": {
+    "url": "https://github.com/launchpalapp/tracker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/launchpalapp/tracker.git"
+  },
+  "license": "MIT",
+  "author": "LaunchPal (https://launchpal.app)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "jsdelivr": "./dist/pal.js",
+  "unpkg": "./dist/pal.js",
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "./dist/pal.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && esbuild src/index.ts --bundle --format=esm --target=es2022 --outfile=dist/index.js && esbuild src/script.ts --bundle --minify --format=iife --target=es2022 --outfile=dist/pal.js && tsc -p tsconfig.build.json",
+    "dev": "esbuild src/index.ts --bundle --format=esm --target=es2022 --outfile=dist/index.js --watch=forever",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "pretest": "npm run build",
+    "test": "vitest run",
+    "check:package": "publint && attw --pack --profile esm-only",
+    "prepublishOnly": "npm test && npm run check:package"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^21.0.4",
+    "prettier": "^3.9.10",
+    "publint": "^0.3.25",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.5"
+  }
+}

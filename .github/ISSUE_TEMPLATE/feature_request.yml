@@ -1,0 +1,16 @@
+name: Feature request
+description: An idea that keeps the script small and private.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you're trying to do, and why it's hard today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: Anything that stores data on the visitor's device or identifies people is out of scope.
