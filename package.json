@@ -1,6 +1,6 @@
 {
   "name": "@launchpal/tracker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Privacy-friendly analytics script: page views, sources, time on page and goals, without cookies or personal data. Under 1 KB.",
   "keywords": [
     "analytics",

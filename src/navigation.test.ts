@@ -13,7 +13,7 @@ describe('init with the Navigation API', () => {
     vi.stubGlobal('fetch', send);
     Object.defineProperty(navigator, 'webdriver', { value: false, configurable: true });
     Object.defineProperty(window, 'navigation', { value: navigation, configurable: true });
-    init({ site: 'bloomly.example', endpoint: 'https://collect.example/v1/collect' });
+    init({ key: '3f9c2a71b8d04e65', endpoint: 'https://collect.example/v1/collect' });
     send.mockClear();
 
     history.pushState(null, '', '/signup');

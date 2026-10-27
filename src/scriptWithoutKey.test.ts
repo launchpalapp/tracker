@@ -2,7 +2,7 @@
 // @vitest-environment-options {"url": "https://bloomly.example/"}
 import { describe, expect, it, vi } from 'vitest';
 
-describe('the script tag without data-site', () => {
+describe('the script tag without data-key or data-site', () => {
   it('sends nothing and tells the developer what is missing', async () => {
     const send = vi.fn(
       async (_url: string, _init: RequestInit) => new Response(null, { status: 202 }),
@@ -16,6 +16,6 @@ describe('the script tag without data-site', () => {
     window.pal?.('signed_up');
 
     expect(send).not.toHaveBeenCalled();
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('data-site'));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('data-key'));
   });
 });

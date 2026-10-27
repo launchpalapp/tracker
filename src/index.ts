@@ -1,8 +1,8 @@
-import { isNewPage, scrollPercent, shouldTrack } from './rules';
+import { isNewPage, scrollPercent } from './rules';
 
 export type TrackerOptions = {
-  /** Your domain without `www`, like `bloomly.example`. Its subdomains count too; other addresses send nothing. */
-  site: string;
+  /** Your app's key from LaunchPal. Events count only from pages on your app's domain. */
+  key: string;
   /** Where events are sent. Defaults to LaunchPal's API. */
   endpoint?: string;
 };
@@ -46,10 +46,8 @@ const onNavigation = (callback: () => void) => {
 };
 
 const createTracker = (options: TrackerOptions): Tracker => {
-  if (
-    typeof window === 'undefined' ||
-    !shouldTrack({ hostname: location.hostname, webdriver: navigator.webdriver }, options.site)
-  ) {
+  // Automated browsers send nothing; the API drops pages outside the app's domain.
+  if (typeof window === 'undefined' || navigator.webdriver) {
     return NO_TRACKING;
   }
 
@@ -57,7 +55,7 @@ const createTracker = (options: TrackerOptions): Tracker => {
   const page = { url: location.href, visibleSince: visibleNow(), scroll: currentScroll() };
 
   const send = (event: TrackerEvent) => {
-    const body = JSON.stringify({ site: options.site, url: page.url, ...event });
+    const body = JSON.stringify({ key: options.key, url: page.url, ...event });
 
     // A text/plain body needs no preflight, cors mode always sends the real Origin, and blockers ban sendBeacon.
     fetch(endpoint, { method: 'POST', body, keepalive: true, mode: 'cors' }).catch(() => undefined);
@@ -115,7 +113,7 @@ const createTracker = (options: TrackerOptions): Tracker => {
 /**
  * Starts tracking page views, time on page and scroll depth, including every path a single-page app
  * navigates to. Call once, in the browser; later calls are ignored. Nothing is sent on the server or
- * on any address other than `site`.
+ * from automated browsers.
  */
 export const init = (options: TrackerOptions): void => {
   current.tracker ??= createTracker(options);

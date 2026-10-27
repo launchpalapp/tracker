@@ -1,14 +1,3 @@
-export const bareHostname = (hostname: string) => hostname.replace(/^www\./, '');
-
-export const isOnSite = (hostname: string, site: string) => {
-  const host = bareHostname(hostname);
-
-  return host === site || host.endsWith(`.${site}`);
-};
-
-export const shouldTrack = (page: { hostname: string; webdriver: boolean }, site: string) =>
-  !page.webdriver && isOnSite(page.hostname, site);
-
 export const scrollPercent = (page: { top: number; viewport: number; height: number }) =>
   page.height <= page.viewport
     ? 100
