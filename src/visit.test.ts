@@ -36,7 +36,7 @@ describe('init and track', () => {
     setPage({});
     vi.spyOn(performance, 'now').mockReturnValue(1_000);
 
-    init({ site: 'bloomly.example', endpoint: ENDPOINT });
+    init({ key: '3f9c2a71b8d04e65', endpoint: ENDPOINT });
 
     expect(send).toHaveBeenCalledWith(
       ENDPOINT,
@@ -44,7 +44,7 @@ describe('init and track', () => {
     );
     expect(sentEvents()).toEqual([
       {
-        site: 'bloomly.example',
+        key: '3f9c2a71b8d04e65',
         url: 'https://bloomly.example/pricing?utm_source=reddit',
         type: 'PAGEVIEW',
         referrer: 'https://www.reddit.com/r/plants',
@@ -62,13 +62,13 @@ describe('init and track', () => {
 
     expect(sentEvents()).toEqual([
       {
-        site: 'bloomly.example',
+        key: '3f9c2a71b8d04e65',
         url: 'https://bloomly.example/pricing?utm_source=reddit',
         type: 'CUSTOM',
         name: 'signed_up',
       },
       {
-        site: 'bloomly.example',
+        key: '3f9c2a71b8d04e65',
         url: 'https://bloomly.example/pricing?utm_source=reddit',
         type: 'ENGAGEMENT',
         seconds: 45,
@@ -86,13 +86,13 @@ describe('init and track', () => {
 
     expect(sentEvents()).toEqual([
       {
-        site: 'bloomly.example',
+        key: '3f9c2a71b8d04e65',
         url: 'https://bloomly.example/pricing?utm_source=reddit',
         type: 'ENGAGEMENT',
         seconds: 10,
         scroll: 80,
       },
-      { site: 'bloomly.example', url: 'https://bloomly.example/signup', type: 'PAGEVIEW' },
+      { key: '3f9c2a71b8d04e65', url: 'https://bloomly.example/signup', type: 'PAGEVIEW' },
     ]);
   });
 });

@@ -9,14 +9,14 @@ declare global {
 }
 
 const script = document.currentScript as HTMLScriptElement | null;
-const site = script?.dataset.site;
+const { key, endpoint } = script?.dataset ?? {};
 const queued = window.pal?.q ?? [];
 
-if (site) {
-  init({ site, endpoint: script?.dataset.endpoint });
+if (key) {
+  init({ key, endpoint });
 } else {
   // eslint-disable-next-line no-console -- the only hint a founder gets when the tag is incomplete
-  console.warn('LaunchPal: data-site is required');
+  console.warn('LaunchPal: data-key is required');
 }
 
 window.pal = track;

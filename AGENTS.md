@@ -14,12 +14,13 @@ does for users.
   mode a `no-referrer` policy turns it into `null`). The API answers `Access-Control-Allow-Origin: *`.
   Never `sendBeacon`: EasyPrivacy blocks every cross-site beacon (`$ping,3p`), which would drop events
   on founders' sites.
-- Track the configured site, `www` and its subdomains (`isOnSite`), never other domains or automated
-  browsers (`navigator.webdriver`), so local development and builder previews send nothing. The API
-  applies the same rule and stores each event's host.
-- `init({ site })` starts the one tracker a page has and ignores later calls; `track(name)` sends a
+- Every event carries the app's `key`. The script doesn't know the app's domain: the API looks the key
+  up and stores events only from pages on that domain (and its `www` and subdomains), so local
+  development and builder previews count for nothing. The script itself skips automated browsers
+  (`navigator.webdriver`).
+- `init({ key })` starts the one tracker a page has and ignores later calls; `track(name)` sends a
   custom event through it and does nothing before `init`. That single tracker is the module's only
-  state. `site` is required everywhere: the script tag sends nothing without `data-site`.
+  state. `key` is required everywhere: the script tag sends nothing without `data-key`.
 - Single-page apps: a page view when the path changes, through the Navigation API's
   `currententrychange`, falling back to wrapping `pushState`/`replaceState` plus `popstate`. Time on
   page is sent each time the tab hides or the page changes, so reports add it up per visitor and page.
@@ -44,7 +45,7 @@ does for users.
 ## Build and release
 
 - `npm run dev` rebuilds `dist/index.js` on every change. `npm run build`: `dist/index.js` (ES module) with `dist/index.d.ts`, and `dist/pal.js` (minified
-  script tag that reads `data-site` (required) and `data-endpoint` and replays queued `pal()` calls).
+  script tag that reads `data-key` (required) and `data-endpoint` and replays queued `pal()` calls).
 - `npm test` builds first, then runs every test including the size limit. `npm run check:package`
   runs publint and arethetypeswrong (ESM-only profile).
 - `.github/workflows/check.yml` runs all checks on every branch and pull request. `release.yml` runs
