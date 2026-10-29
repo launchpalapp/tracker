@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   check:
+    # $/ is GitHub's self-repository syntax (July 2026), not a typo: unlike ./ it can't load files a step left on the runner.
     uses: $/.github/workflows/check.yml
 
   publish:
@@ -29,7 +30,7 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           package-manager-cache: false
           registry-url: https://registry.npmjs.org
 

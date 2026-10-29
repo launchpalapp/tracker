@@ -53,5 +53,7 @@ does for users.
   publishing (GitHub OIDC, no stored token, provenance added) and a GitHub release with `pal.js`.
 - Semantic versioning. Every release gets a `CHANGELOG.md` entry first, then the version bump, then
   the tag.
+- Node is the version in `.nvmrc`, and both workflows read it from there. TypeScript stays on 6.0
+  (`~6.0.2`) until typescript-eslint supports 7.
 - Actions are pinned by commit SHA with the version in a comment, checkouts don't keep credentials,
   and the release job uses no cache. `zizmor --persona=pedantic .github` reports no findings.
