@@ -8,7 +8,13 @@ does for users.
 - No runtime dependencies. The script tag file (`dist/pal.js`) stays under 1 KB gzipped;
   `src/size.test.ts` enforces it.
 - Nothing on the visitor's device: no cookies, local or session storage, IndexedDB or
-  fingerprinting. The script never sends an identifier; the server makes the daily visitor hash.
+  fingerprinting. The one exception is the opt-out flag (`pal_optout` in local storage), written only
+  when a visitor opts out. The script never sends an identifier; the server makes the daily visitor hash.
+- Opting out: `optOut()`, `optIn()` and `isOptedOut()`. Nothing is sent while a visitor is opted out.
+  Global Privacy Control isn't read: it means "don't sell or share", which LaunchPal never does, and
+  Brave and DuckDuckGo turn it on for everyone, so honouring it would hide visitors who made no choice. The script tag
+  exposes every function other than events on `pal` (`pal.optOut()`), so `pal(name)` is only ever an
+  event.
 - Events go with `fetch` (`keepalive`, `mode: 'cors'`) as a `text/plain` JSON string, so they need no
   CORS preflight, survive the page closing and always carry the page's real `Origin` (in `no-cors`
   mode a `no-referrer` policy turns it into `null`). The API answers `Access-Control-Allow-Origin: *`.
@@ -33,7 +39,7 @@ does for users.
 - TypeScript strict, ES modules, ES2022 output. Braces on every block, `const` only, no mutation
   outside the tracker's own state.
 - Names explain the code. A comment is one line and only for a non-obvious gotcha. The exported
-  API (`init`, its options and `track`) has short TSDoc comments for editors; nothing
+  API (`init`, its options, `track` and the opt-out functions) has short TSDoc comments for editors; nothing
   else does.
 - Pure rules live in `src/rules.ts` with tests in `src/rules.test.ts`.
 - Browser behaviour is tested in happy-dom, one scenario per file: listeners and history wrapping

@@ -5,6 +5,14 @@ and versions follow [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-07
+
+### Added
+
+- Opting out: `optOut()`, `optIn()` and `isOptedOut()`, also on the script tag as `pal.optOut()`,
+  `pal.optIn()` and `pal.isOptedOut()`. An opted-out visitor sends nothing, on this visit and later
+  ones; the choice is the only thing the tracker stores on their device.
+
 ## [0.2.0] - 2026-10-27
 
 ### Changed
@@ -26,6 +34,7 @@ and versions follow [Semantic Versioning](https://semver.org).
 - `dist/pal.js` for a script tag, with `data-site` (required) and a `pal()` queue for events sent
   before it loads. Under 1 KB gzipped.
 
-[Unreleased]: https://github.com/launchpalapp/tracker/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/launchpalapp/tracker/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/launchpalapp/tracker/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/launchpalapp/tracker/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/launchpalapp/tracker/releases/tag/v0.1.0

@@ -1,6 +1,11 @@
-import { init, track } from './index';
+import { init, isOptedOut, optIn, optOut, track } from './index';
 
-type Pal = ((name: string) => void) & { q?: [string][] };
+type Pal = ((name: string) => void) & {
+  q?: [string][];
+  optOut?: () => void;
+  optIn?: () => void;
+  isOptedOut?: () => boolean;
+};
 
 declare global {
   interface Window {
@@ -19,5 +24,5 @@ if (key) {
   console.warn('LaunchPal: data-key is required');
 }
 
-window.pal = track;
+window.pal = Object.assign((name: string) => track(name), { optOut, optIn, isOptedOut });
 queued.forEach(([name]) => track(name));
