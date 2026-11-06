@@ -5,6 +5,11 @@ and versions follow [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+### Changed
+
+- The package description says "counted anonymously, without cookies", and the README explains the
+  script tag's `pal('name')` and `pal.optOut()` more plainly.
+
 ## [0.3.0] - 2026-11-07
 
 ### Added
