@@ -10,6 +10,7 @@ export type TrackerOptions = {
 type Tracker = { track: (name: string) => void };
 
 const DEFAULT_ENDPOINT = 'https://api.launchpal.app/v1/collect';
+const OPT_OUT_KEY = 'pal_optout';
 const NO_TRACKING: Tracker = { track: () => undefined };
 const current: { tracker: Tracker | null } = { tracker: null };
 
@@ -17,6 +18,15 @@ type TrackerEvent =
   | { type: 'PAGEVIEW'; referrer?: string }
   | { type: 'ENGAGEMENT'; seconds: number; scroll: number }
   | { type: 'CUSTOM'; name: string };
+
+// Storage can throw: blocked site data, sandboxed frames, some private windows.
+const withStorage = <T>(use: (storage: Storage) => T): T | undefined => {
+  try {
+    return use(localStorage);
+  } catch {
+    return undefined;
+  }
+};
 
 const visibleNow = () => (document.visibilityState === 'visible' ? performance.now() : null);
 
@@ -55,6 +65,10 @@ const createTracker = (options: TrackerOptions): Tracker => {
   const page = { url: location.href, visibleSince: visibleNow(), scroll: currentScroll() };
 
   const send = (event: TrackerEvent) => {
+    if (isOptedOut()) {
+      return;
+    }
+
     const body = JSON.stringify({ key: options.key, url: page.url, ...event });
 
     // A text/plain body needs no preflight, cors mode always sends the real Origin, and blockers ban sendBeacon.
@@ -122,4 +136,21 @@ export const init = (options: TrackerOptions): void => {
 /** Records a custom event by its name, up to 64 characters, like `track('signed_up')`. */
 export const track = (name: string): void => {
   current.tracker?.track(name);
+};
+
+/** True when this visitor asked not to be counted on this site, through `optOut()`. */
+export const isOptedOut = (): boolean =>
+  withStorage((storage) => storage.getItem(OPT_OUT_KEY)) === '1';
+
+/**
+ * Stops counting this visitor on this site, from now on and on later visits. Link it from your
+ * privacy page. The choice is the only thing the tracker ever stores on the visitor's device.
+ */
+export const optOut = (): void => {
+  withStorage((storage) => storage.setItem(OPT_OUT_KEY, '1'));
+};
+
+/** Counts this visitor again after `optOut()`. */
+export const optIn = (): void => {
+  withStorage((storage) => storage.removeItem(OPT_OUT_KEY));
 };

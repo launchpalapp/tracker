@@ -7,7 +7,9 @@ The privacy-friendly analytics script behind [LaunchPal](https://launchpal.app):
 visitors came from, time on page, scroll depth and the events you name. Under 1 KB gzipped, no
 dependencies.
 
-- Nothing is stored on the visitor's device: no cookies, local storage or fingerprinting
+- Nothing is stored on the visitor's device: no cookies, local storage or fingerprinting. The one
+  exception is a visitor who opts out: that choice is remembered on their device
+- Visitors can opt out with one link on your privacy page
 - No IP addresses or identities are kept. The server counts visitors with a code made from a secret
   that is replaced and deleted every day, so visits can't be linked across days or sites
 - Works on multi-page sites and single-page apps
@@ -58,6 +60,29 @@ calls are kept and sent once it loads:
 ```html
 <script>window.pal = window.pal || function () { (window.pal.q = window.pal.q || []).push(arguments) }</script>
 ```
+
+## Opting out
+
+Visitors can choose not to be counted. Put a link to it next to the sentence in your privacy policy
+that says you use this script:
+
+```html
+<a href="#" onclick="pal.optOut(); return false">Don't count my visits</a>
+```
+
+With the npm package, import the same functions:
+
+```ts
+import { isOptedOut, optIn, optOut } from '@launchpal/tracker';
+```
+
+- `optOut()` stops sending right away, on this visit and later ones. It stores one flag
+  (`pal_optout`) in the visitor's local storage, the only thing the tracker ever stores.
+- `optIn()` removes the flag, and counting starts again.
+- `isOptedOut()` says whether this visitor is opted out, to show the right link.
+
+Every function other than events hangs off `pal` (`pal.optOut()`), so `pal('name')` always means an
+event.
 
 ## What it sends
 

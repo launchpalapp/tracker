@@ -20,6 +20,8 @@ describe('the script tag', () => {
 
     await import('./script');
     window.pal('upgraded');
+    window.pal.optOut?.();
+    window.pal('cancelled');
 
     const events = send.mock.calls.map(([, init]) => JSON.parse(String(init.body)));
 
@@ -31,5 +33,6 @@ describe('the script tag', () => {
       ['3f9c2a71b8d04e65', 'CUSTOM', 'signed_up'],
       ['3f9c2a71b8d04e65', 'CUSTOM', 'upgraded'],
     ]);
+    expect(window.pal.isOptedOut?.()).toBe(true);
   });
 });
