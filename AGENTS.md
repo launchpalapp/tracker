@@ -12,9 +12,8 @@ does for users.
   when a visitor opts out. The script never sends an identifier; the server makes the daily visitor hash.
 - Opting out: `optOut()`, `optIn()` and `isOptedOut()`. Nothing is sent while a visitor is opted out.
   Global Privacy Control isn't read: it means "don't sell or share", which LaunchPal never does, and
-  Brave and DuckDuckGo turn it on for everyone, so honouring it would hide visitors who made no choice. The script tag
-  exposes every function other than events on `pal` (`pal.optOut()`), so `pal(name)` is only ever an
-  event.
+  Brave and DuckDuckGo turn it on for everyone, so honouring it would hide visitors who made no choice. On the script tag,
+  `pal(name)` is only ever an event; other actions are methods on `pal` (`pal.optOut()`).
 - Events go with `fetch` (`keepalive`, `mode: 'cors'`) as a `text/plain` JSON string, so they need no
   CORS preflight, survive the page closing and always carry the page's real `Origin` (in `no-cors`
   mode a `no-referrer` policy turns it into `null`). The API answers `Access-Control-Allow-Origin: *`.

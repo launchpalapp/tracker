@@ -81,8 +81,8 @@ import { isOptedOut, optIn, optOut } from '@launchpal/tracker';
 - `optIn()` removes the flag, and counting starts again.
 - `isOptedOut()` says whether this visitor is opted out, to show the right link.
 
-Every function other than events hangs off `pal` (`pal.optOut()`), so `pal('name')` always means an
-event.
+With the script tag, `pal('signed_up')` records an event. Other actions are written with a dot, like
+`pal.optOut()`, so they're never mistaken for an event.
 
 ## What it sends
 
